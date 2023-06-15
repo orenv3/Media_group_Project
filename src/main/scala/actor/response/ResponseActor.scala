@@ -1,31 +1,27 @@
 package actor.response
 
 
-import actor.receive.BidRequest.{BidRequest, BidRequest4Response, Request}
-import actor.response.BidResponse.{BidResponse, BidResponse2Request, Response}
-import akka.actor.{Actor, ActorSystem, Props}
-import net.liftweb.json.{Serialization, ShortTypeHints}
+import actor.response.BidResponse.{JustEndingMsg,BidResponse, BidResponse2Request}
+import akka.actor.Actor
 import net.liftweb.json.Serialization.write
+import net.liftweb.json.DefaultFormats
 
 
 case class ResponseActor() extends Actor {
-//  val responseActorSys = ActorSystem("Mars-ResponseActor")
-  implicit val format = Serialization.formats(ShortTypeHints(List( classOf[BidResponse])))
-
+  implicit val formats = DefaultFormats
    def receive   = {
-      case  BidResponse2Request(req,reqActor) => {
-        val writeBidReq = Serialization.write(BidRequest(Some(""),Some("")))
-        val bidRes4Req = BidResponse("response","From response")
-         println("-------------------------")
+      case  BidResponse2Request(reqId,reqActor) => {
+  val responseObj = BidResponse(reqId
+    ,"seatbid: String"
+    , "bidid: String"
+    , "cur: String"
+    ," customdata: String"
+    , "nbr: String"
+    , "ext: String")
+        val writeBidResponse = write(responseObj)
          println("ResponseActor is executed")
-        sender() ! bidRes4Req
+        sender() ! JustEndingMsg("The Response object in json: \n"+writeBidResponse)
       }
-   /*   case BidRequest(id,imp) => {
-        val bidRes4Req = BidRequest4Response(BidResponse.BidResponse(id,null))
-        println("-------------------------")
-        println("ResponseActor is executed ==> case BidRequest(id,imp) =>")
-       // responseActorSys.actorOf(Props(ResponseActor()), "ResponseActor") ! bidRes4Req
-      }*/
 
    }
   override def unhandled(message: Any): Unit = {

@@ -6,13 +6,52 @@ import actor.receive.ReceiveActor
 import actor.response.ResponseActor
 import akka.actor.{ActorSystem, Props}
 import com.typesafe.scalalogging.Logger
+import org.json4s.DefaultFormats
 
 object Main extends App {
   val logger = Logger("MainLogger")
   logger.info("Main executed")
+  implicit val formats = DefaultFormats
   val receiveActorSys = ActorSystem("Mars-ReceiveActor").actorOf(Props[ReceiveActor], "ReceiveActor")
   val responseActorSys = ActorSystem("Mars-ResponseActor").actorOf(Props[ResponseActor], "responseActor")
+  private val jsonStringRequest =
+    """{
+      |"id": "requestId228888",
+      |"at": 1,
+      |"cur": [ "USD" ],
+      |"imp": [
+      |{
+      |"id": "1",
+      |"bidfloor": 0.03,
+      |"banner": {
+      |"h": 250,
+      | "w": 300,
+      |  "pos": 0
+      |}
+      |}
+      |],
+      |"site": {
+      |"id": "102855",
+      |"cat": [ "IAB3-1" ],
+      |"domain": "www.foobar.com",
+      |"page": "http://www.foobar.com/1234.html ",
+      |"publisher": {
+      |"id": "8953",
+      |"name": "foobar.com",
+      |"cat": [ "IAB3-1" ],
+      |"domain": "foobar.com"
+      |}
+      |},
+      |"device": {
+      |"ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13 (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
+      |"ip": "123.145.167.10"
+      |},
+      |"user": {
+      |"id": "55816b39711f9b5acf3b90e313ed29e51665623f"
+      |}
+      |}""".stripMargin
 
-    receiveActorSys ! BidRequest4Response(BidRequest(Some("id111Main"),Some("{mainTst:ttt,jsnObj:jsnObj}")),responseActorSys)
+    receiveActorSys ! BidRequest4Response(jsonStringRequest,responseActorSys)
+
 
 }

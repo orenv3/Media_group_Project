@@ -1,46 +1,34 @@
 package actor.receive
 
 import actor.Main.Main.logger
-import actor.receive.BidRequest.{BidRequest, BidRequest4Response}
-import actor.response.BidResponse.{BidResponse, BidResponse2Request}
-import net.liftweb.json._
-import net.liftweb.json.Serialization.{formats, read, write}
-import akka.actor.{Actor, ActorSystem, Props}
+import actor.receive.BidRequest.BidRequest4Response
+import actor.response.BidResponse.{BidResponse2Request, JustEndingMsg}
+import org.json4s.DefaultFormats
+import akka.actor.Actor
+import org.json4s.jackson.JsonMethods._
 
 
 case class ReceiveActor() extends Actor  {//extends Actor
-  //implicit val formats = DefaultFormats
-  val receiveActorSys = ActorSystem("Mars-ReceiveActor")
-  val ref = receiveActorSys.actorOf(Props[ReceiveActor], "ReceiveActor")
+  implicit val formats = DefaultFormats
+
   logger.info("Logger from Receive")
-  implicit val format = Serialization.formats(ShortTypeHints(List(classOf[BidRequest], classOf[BidResponse])))
 
   def receive  = {
-    case BidRequest4Response(reqBid,responseActor) => {
+    case BidRequest4Response(reqBidString,responseActor) => {
+      val requestBid_jValue = parse(reqBidString)
+      val reqBidStringMap = requestBid_jValue.extract[Map[String, Any]]
+      val deviceField2Map : Map[String,Any] = reqBidStringMap("device").asInstanceOf[Map[String, Any]]
 
-      val bidReq = BidRequest(reqBid.id,reqBid.json)
-//val bidReq4Response = BidRequest4Response(BidResponse(id,"{json object in response}"))
-     println("---------------")
-      val writeBidReq = write(bidReq)
-      println(s"BidRequest - receive - write(bidReq) writeBidReq: $bidReq")
-     /* println("---------------")
+      logger.info("User agent via field 'au' is:  "+deviceField2Map("ua"))
+      println("---------------")
 
-      val tst : BidRequest = read(
-        """{
-          |"id":"bidid123",
-          |"json":"1"
-          |}""".stripMargin)
-      println(s"read string: $tst "  )*/
-      responseActor ! BidResponse2Request(bidReq,sender())
-      // val r = Serialization.read(bidReq,DefaultFormats.->(BidRequest) )
-     // val sys = ActorSystem("fire-and-forget-sample")
-      //ref ! (bidReq4Response)//tell(BidRequest4Response,sender())
-
+      val bidRequestId = reqBidStringMap("id")
+      logger.info("Request id is: " + bidRequestId)
+      println("---------------")
+      responseActor ! BidResponse2Request(bidRequestId,sender())
     }
-    case BidResponse(id,other) => {
-      val response = BidResponse(id,other)
-      val writeBidResponse = write(response)
-      println(s"The response is: $response")
+    case JustEndingMsg(endMsg) => {
+      println(s"The response from Response Actor is: $endMsg")
       println("end of circle")
 
     }
@@ -48,7 +36,31 @@ case class ReceiveActor() extends Actor  {//extends Actor
   override def unhandled(message: Any): Unit = {
     println(s"override def unhandled in ReqUest **** $message")
   }
-//  override def toJson(obj: ConvertRead2JsonTrait)
+  //      println(s"BidRequest - receive - write(bidReq) writeBidReq: $bidReq")
+  //val id  = reqBid_jValue(1)
+  //val id  = reqBid_jValue \ "id"
+  //      val agent = reqBid_jValue \ "au"
+  // val id =  ff.take(0)
+  //     val device =  ff("site")
 
+  // val bidReq = BidRequest(reqBid.id,reqBid.json)
+  //      val devString = ff("device").toString
+  //      val parseDevice = parse(devString).extract[Map[String, Any]]
+
+  //      val caseClassBidRequest = reqBid_jValue.extract[BidRequest]
+  // write(caseClassBidRequest)
+  //val au =  mapBidRequest.apply(0)
+  //      logger.info(s"The full request is: $caseClassBidRequest ")
+  //request id and user agent
+  //      logger.info(s"The request id: $caseClassBidRequest. " + "id: "+ objBidRequest.id )
 
 }
+//      val writeBidReq = write(bidReq)
+
+
+/*   val jVal  = parse(
+     """{
+       |"id":"bidid123",
+       |"json":"1"
+       |}""".stripMargin)*/
+//val mapBidRequest = reqBid_jValue.extract[Seq[Map[String, Any]]]
