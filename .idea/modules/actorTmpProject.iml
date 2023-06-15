@@ -8,12 +8,11 @@
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/scala" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/scala" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../target" />
-      <excludeFolder url="file://$MODULE_DIR$/../../project/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="RUNTIME" name="sbt: ch.qos.logback:logback-classic:1.4.7:jar" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="sbt: ch.qos.logback:logback-core:1.4.7:jar" level="project" />
+    <orderEntry type="library" name="sbt: ch.qos.logback:logback-classic:1.4.7:jar" level="project" />
+    <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.4.7:jar" level="project" />
     <orderEntry type="library" name="sbt: com.thoughtworks.paranamer:paranamer:2.8:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor-typed_2.13:2.8.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor_2.13:2.8.0:jar" level="project" />
