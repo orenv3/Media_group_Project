@@ -1,10 +1,6 @@
 package actor.receive
 
-import actor.response.BidResponse.{BidResponse, Response}
 import akka.actor.ActorRef
-import net.liftweb.json._
-import net.liftweb.json.Serialization.write
-import net.liftweb.json.Serialization.read
 
 object BidRequest{
 
@@ -30,7 +26,6 @@ object BidRequest{
                          regs:String,
                          ext:String) extends Request
   case class BidRequest4Response (bidReqStringj:String,responseActor: ActorRef) extends Request
-//  case class Imp(id:String,banner:Banner)
   case class Device(au:String,ip:String,pos:Int)
 
 }

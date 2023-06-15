@@ -1,7 +1,8 @@
 package actor.response
 
 
-import actor.response.BidResponse.{JustEndingMsg,BidResponse, BidResponse2Request}
+import actor.Main.Main.logger
+import actor.response.BidResponse.{BidResponse, BidResponse2Request, JustEndingMsg}
 import akka.actor.Actor
 import net.liftweb.json.Serialization.write
 import net.liftweb.json.DefaultFormats
@@ -9,8 +10,10 @@ import net.liftweb.json.DefaultFormats
 
 case class ResponseActor() extends Actor {
   implicit val formats = DefaultFormats
-   def receive   = {
+  logger.info("execute ResponseActor ")
+  def receive   = {
       case  BidResponse2Request(reqId,reqActor) => {
+        logger.debug(s"The current response -> request id is: $reqId")
   val responseObj = BidResponse(reqId
     ,"seatbid: String"
     , "bidid: String"
@@ -19,12 +22,12 @@ case class ResponseActor() extends Actor {
     , "nbr: String"
     , "ext: String")
         val writeBidResponse = write(responseObj)
-         println("ResponseActor is executed")
         sender() ! JustEndingMsg("The Response object in json: \n"+writeBidResponse)
+        logger.info("Message type JustEndingMsg sent")
       }
 
    }
   override def unhandled(message: Any): Unit = {
-    println("override def unhandled in response ####")
+    logger.info("override def unhandled in response ####")
   }
 }

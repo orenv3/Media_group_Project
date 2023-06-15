@@ -1,11 +1,8 @@
 package actor.response
 
-import actor.receive.BidRequest.BidRequest
 import akka.actor.ActorRef
 
 object BidResponse {
-
-
 
   trait Response
   case class BidResponse(id:Any,
