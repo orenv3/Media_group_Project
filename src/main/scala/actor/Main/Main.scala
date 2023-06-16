@@ -1,9 +1,8 @@
 package actor.Main
 
-import actor.receive.BidRequest.BidRequest4Response
-import actor.receive.ReceiveActor
-import actor.response.ResponseActor
-import akka.actor.{ActorSystem, Props}
+import actor.Behaviors.ResponseBehaviorsConf.responseAct
+import actor.conf.ReceiveBehaviorsConf.receiveAct
+import actor.receive.BidRequest.{BidRequest4Response, JustEndingMsg}
 import com.typesafe.scalalogging.Logger
 import org.json4s.DefaultFormats
 
@@ -11,8 +10,7 @@ object Main extends App {
   val logger = Logger("MainLogger")
   logger.info("execute Main")
   implicit val formats = DefaultFormats
-  val receiveActorSys = ActorSystem("Mars-ReceiveActor").actorOf(Props[ReceiveActor], "ReceiveActor")
-  val responseActorSys = ActorSystem("Mars-ResponseActor").actorOf(Props[ResponseActor], "responseActor")
+
   private val jsonStringRequest =
     """{
       |"id": "requestId228888",
@@ -50,7 +48,7 @@ object Main extends App {
       |}
       |}""".stripMargin
 
-    receiveActorSys ! BidRequest4Response(jsonStringRequest,responseActorSys)
+  receiveAct ! BidRequest4Response(jsonStringRequest,responseAct)
 
 
 }

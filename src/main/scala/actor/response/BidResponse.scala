@@ -1,6 +1,6 @@
 package actor.response
 
-import akka.actor.ActorRef
+import akka.actor.typed.ActorSystem
 
 object BidResponse {
 
@@ -12,6 +12,6 @@ object BidResponse {
                          customdata:String,
                          nbr:String,
                          ext:String) extends Response
-  case class BidResponse2Request(request:Any, reqActor:ActorRef) extends Response
-  case class JustEndingMsg(message:String)
+  case class BidResponse2Request(request:Any,responseActor:ActorSystem[Response]) extends Response
+
 }

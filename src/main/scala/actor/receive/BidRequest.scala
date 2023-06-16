@@ -1,6 +1,7 @@
 package actor.receive
 
-import akka.actor.ActorRef
+import actor.response.BidResponse.Response
+import akka.actor.typed.ActorSystem
 
 object BidRequest{
 
@@ -25,8 +26,8 @@ object BidRequest{
                          source:String,
                          regs:String,
                          ext:String) extends Request
-  case class BidRequest4Response (bidReqStringj:String,responseActor: ActorRef) extends Request
-  case class Device(au:String,ip:String,pos:Int)
+  case class BidRequest4Response (bidReqStringj:String,responseActor: ActorSystem[Response]) extends Request
+  case class JustEndingMsg(message:String) extends Request
 
 }
 
